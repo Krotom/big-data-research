@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # === CONFIG ===
-CSV_PATH = os.getcwd() + input("File name: ")
+CSV_PATH = os.getcwd() + "\\" + input("File name: ")
 
 # === LOAD DATA ===
 df = pd.read_csv(CSV_PATH)
