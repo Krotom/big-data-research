@@ -75,8 +75,8 @@ plt.pause(0.001)
 
 # === TOP CORRELATIONS ===
 print("\nEn Güçlü Korelasyonlar:")
-corr_pairs = corr.unstack().sort_values(ascending=False)
-corr_pairs = corr_pairs[corr_pairs != 1.0]  # remove self correlations
+mask = np.triu(np.ones(corr.shape), k=1).astype(bool)
+corr_pairs = corr.where(mask).unstack().dropna().sort_values(ascending=False)
 print(corr_pairs.dropna().head(15))
 
 # === SAMPLE RELATIONSHIPS ===
