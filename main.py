@@ -24,7 +24,7 @@ df["Cinsiyet"] = df["Cinsiyet"].map({"ERKEK": 0, "KIZ": 1})
 df["Okul Türü"] = df["Okul Türü"].map({"DEVLET": 0, "ÖZEL": 1})
 
 # Convert Hazırlık -> 8.5
-df["Sınıf Seviyesi"] = df["Sınıf Seviyesi"].replace("Hazırlık", 8.5).astype(float)
+df["Sınıf Seviyesi"] = df["Sınıf Seviyesi"].replace("Hazırlık", 8.5).infer_objects(copy=False).astype(float)
 df["Sınıf Seviyesi"] = pd.to_numeric(df["Sınıf Seviyesi"], errors="coerce")
 
 # Convert numeric columns safely
