@@ -11,6 +11,8 @@ import os
 
 # --- ENVIRONMENT SETUP ---
 load_dotenv()
+UPLOAD = int(os.getenv("UPLOAD"))
+SAVE = int(os.getenv("SAVE"))
 DB_ACCESS = os.getenv("DB_ACCESS")
 
 if not DB_ACCESS:
@@ -21,7 +23,7 @@ pd.set_option('future.no_silent_downcasting', True)
 sns.set_theme(style="darkgrid")
 
 # --- CONFIG ---
-CSV_PATH = "buyuk_veri_deneyi.csv"
+CSV_PATH = "Büyük_Veri_Deneyi.csv"
 
 # --- LOAD ---
 print("📊 Loading dataset...")
@@ -103,17 +105,42 @@ for (a, b) in corr_pairs.head(30).index:
         if p < 0.05:
             print(f"{a} ↔ {b}: r={corr.loc[a,b]:.2f}, p={p:.4f}")
 
-# --- UPLOAD CLEANED DATA ---
-print("\n☁️ Uploading cleaned dataset to SQLiteCloud...")
+if UPLOAD:
+    # --- UPLOAD CLEANED DATA ---
+    print("\n☁️ Uploading cleaned dataset to SQLiteCloud...")
 
-try:
-    conn = sqlitecloud.connect(DB_ACCESS)
-    conn.execute("CREATE TABLE IF NOT EXISTS bigdata_cleaned AS SELECT * FROM df LIMIT 0;")
-    conn.upload_dataframe("bigdata_cleaned", df, if_exists="replace")
-    conn.close()
-    print("✅ Uploaded successfully to SQLiteCloud.")
-except Exception as e:
-    print("⚠️ Upload failed:", e)
+    try:
+        conn = sqlitecloud.connect(DB_ACCESS)
+        cur = conn.cursor()
+
+        # Drop the old table if exists
+        cur.execute("DROP TABLE IF EXISTS bigdata_cleaned")
+
+        # Create table with the same schema as the DataFrame
+        cols = ", ".join([f'"{c}" TEXT' for c in df.columns])
+        cur.execute(f"CREATE TABLE bigdata_cleaned ({cols});")
+
+        # Insert all rows efficiently
+        for _, row in df.iterrows():
+            placeholders = ", ".join(["?" for _ in row])
+            sql = f"INSERT INTO bigdata_cleaned VALUES ({placeholders});"
+            cur.execute(sql, tuple(str(x) if pd.notna(x) else None for x in row))
+
+        conn.commit()
+        conn.close()
+        print("✅ Uploaded successfully to SQLiteCloud.")
+
+    except Exception as e:
+        print("⚠️ Upload failed:", e)
+
+if SAVE:
+    print("\n🔗 Saving cleaned data and correlations...")
+    try:
+        df.to_csv("cleaned_data.csv", index=False)
+        corr_pairs.to_csv("correlations.csv")
+        print("✅ Saved successfully to local disk.")
+    except Exception as e:
+        print("⚠️ Saving failed:", e)
 
 # --- SUMMARY ---
 print("\n--- SUMMARY ---")
