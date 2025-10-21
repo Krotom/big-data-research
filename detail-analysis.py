@@ -124,7 +124,7 @@ while True:
     print("\n🔍 Manual Correlation Checker")
     print("Type two column names to analyze, or press ENTER to exit.\n")
     print("Available columns:")
-    print(", ".join(df.columns[:10]), "...")
+    print(", ".join(df.columns))
     col1 = input("\nColumn 1: ").strip()
     if not col1:
         break
@@ -171,8 +171,8 @@ if UPLOAD and DB_ACCESS:
 print("\n--- SUMMARY ---")
 print(f"Entries: {len(df)}")
 print(f"Columns: {len(df.columns)}")
-print("Mean Sleep Quality:", df["Uyku Kalitesi"].mean().round(2) if "Uyku Kalitesi" in df else "N/A")
-print("Mean Screen Time:", df["Günlük Ekran Kullanım Süresi"].mean().round(2) if "Günlük Ekran Kullanım Süresi" in df else "N/A")
-print("Mean Academic Satisfaction:", df["Akademik Başarı Memnuniyeti"].mean().round(2) if "Akademik Başarı Memnuniyeti" in df else "N/A")
+print("Mean Sleep Quality:", df["Uyku Kalitesi"].mean().round(2))
+print("Mean Screen Time:", df["Günlük Ekran Kullanım Süresi"].mean().round(2))
+print("Mean Academic Satisfaction:", df["Akademik Başarı Memnuniyeti"].mean().round(2))
 
 input("\nPress Enter to exit...")
