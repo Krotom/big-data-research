@@ -142,7 +142,8 @@ while True:
 
     sns.lmplot(x=col1, y=col2, data=df, line_kws={'color': 'red'}, scatter_kws={'alpha':0.5})
     plt.title(f"{col1} vs {col2}\nPearson r={r_p:.2f}, Spearman r={r_s:.2f}")
-    plt.show()
+    plt.show(block=False)
+    plt.pause(0.001)
 
 # === SAVE ===
 if SAVE:
