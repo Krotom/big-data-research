@@ -12,6 +12,7 @@ import os
 
 # === ENVIRONMENT SETUP ===
 load_dotenv()
+CSV_PATH = os.getenv("FILE_NAME", "Büyük_Veri_Deneyi.csv")
 UPLOAD = int(os.getenv("UPLOAD", 0))
 SAVE = int(os.getenv("SAVE", 1))
 DB_ACCESS = os.getenv("DB_ACCESS")
@@ -22,9 +23,6 @@ if not DB_ACCESS:
 pd.set_option('display.float_format', lambda x: f'{x:.2f}')
 pd.set_option('future.no_silent_downcasting', True)
 sns.set_theme(style="darkgrid")
-
-# === CONFIG ===
-CSV_PATH = "Büyük_Veri_Deneyi.csv"
 
 # === LOAD ===
 print("📊 Loading dataset...")
